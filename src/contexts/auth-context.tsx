@@ -16,7 +16,6 @@ import { User } from "@/types/user.model.ts";
 type AuthContextProps = {
 	refreshUser: () => void;
 	isAuthenticated: boolean;
-	isLaboratory: boolean;
 	handleAuthentication: (token: string) => void;
 	handleLogout: () => void;
 	user?: User;
@@ -24,7 +23,6 @@ type AuthContextProps = {
 
 const AuthContext = React.createContext<AuthContextProps>({
 	isAuthenticated: false,
-	isLaboratory: false,
 	handleAuthentication: () => false,
 	handleLogout: () => false,
 	refreshUser: () => false,
@@ -34,7 +32,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
 	const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-	const [isLaboratory, setIsLaboratory] = useState<boolean>(false);
 	const [user, setUser] = useState<User>();
 
 	const [isFetching, fetchUserProfile] = useService(authService.profile, {
@@ -59,7 +56,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
 	const handleLogout = useCallback(() => {
 		setIsAuthenticated(false);
-		setIsLaboratory(false);
 		setUser(undefined);
 		localStorage.removeItem("access_token");
 		sessionStorage.removeItem("access_token");
@@ -86,12 +82,11 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 		return {
 			user,
 			refreshUser,
-			isLaboratory,
 			isAuthenticated,
 			handleAuthentication,
 			handleLogout,
 		};
-	}, [isAuthenticated, isLaboratory, user]);
+	}, [isAuthenticated, user]);
 
 	return (
 		<AuthContext.Provider value={state}>

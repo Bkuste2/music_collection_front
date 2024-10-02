@@ -52,7 +52,6 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
 
 	const handleAuthentication = useCallback((token: string) => {
 		localStorage.setItem("access_token", token);
-		console.log(token);
 		fetchUserProfile();
 		navigate("/");
 		window.location.reload();

@@ -1,15 +1,15 @@
-import { Button, Col, Form } from "antd";
-import { FieldsBuilder } from "@components/builder/fields-builder.tsx";
-import { minLength, required } from "@components/data-entry/validators.ts";
-import { Separator } from "@components/layout/separator.tsx";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { notification } from "@/services/default/notification.ts";
-import { useCallback, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { Drawer } from "@components/feedback/drawer.tsx";
+import { useAuth } from "@/contexts/auth-context.tsx";
 import { albumsService, CreateDTO } from "@/services/albumsService.ts";
 import { artistService } from "@/services/artist.service.ts";
-import { useAuth } from "@/contexts/auth-context.tsx";
+import { notification } from "@/services/default/notification.ts";
+import { FieldsBuilder } from "@components/builder/fields-builder.tsx";
+import { minLength, required } from "@components/data-entry/validators.ts";
+import { Drawer } from "@components/feedback/drawer.tsx";
+import { Separator } from "@components/layout/separator.tsx";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Button, Col, Form } from "antd";
+import { useCallback, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const AlbumForm = () => {
 	const { id } = useParams();
@@ -20,7 +20,8 @@ export const AlbumForm = () => {
 
 	const handleSuccess = useCallback(() => {
 		navigate(-1);
-		notification(`Register ${!!id ? "edited": "created"} with success`, "success")
+		notification(`Register ${!!id ? "edited" : "created"} with success`, "success")
+		queryClient.invalidateQueries({ queryKey: ["get-all-albums"] });
 	}, []);
 
 	const createMutation = useMutation({
@@ -71,12 +72,10 @@ export const AlbumForm = () => {
 				} else {
 					createMutation.mutate({ ...values, user_id: user?.id as string });
 				}
-				queryClient.invalidateQueries({ queryKey: ["get-all-albums"] });
 			} catch (e) {
 				console.log(e);
 				notification("Error", "error");
 			}
-			console.log(values);
 		},
 		[id, user, editMutation, createMutation]
 	);
@@ -86,14 +85,12 @@ export const AlbumForm = () => {
 			getAlbumById.refetch().then(({ data, isFetched }) => {
 				if (isFetched && data) {
 
-					const teste = data;
-					console.log(teste.data.data.attributes);
-
+					const responseData = data.data;
 					form.setFieldsValue({
-						artist_id: teste.data.data.attributes["artist-id"],
+						artist_id: responseData.data.attributes["artist-id"],
 						user_id: user?.id,
-						year: teste.data.data.attributes.year,
-						name: teste.data.data.attributes.name
+						year: responseData.data.attributes.year,
+						name: responseData.data.attributes.name
 					});
 				}
 			});

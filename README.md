@@ -1,4 +1,4 @@
-# React + Tailwind + Eslint/Prettier
+# Music Collection
 
 This template provides a basic setup for working with `React` (Vite). Here we use `tailwind` for styles, `Axios` and `tanstack/react-query` for data fetching and we use `rocketseat/eslint-config` for eslint (with prettier plugin) to promote better code standardization.
 <br/>
@@ -19,8 +19,8 @@ Additionally, we provide some `aliases` to make it easier to import folders.
 ## To use this template you need to follow the next steps
 
 ```bash
-git clone https://github.com/Bkuste2/react-tailwind-template.git
-cd react-tailwind-template
+git clone https://github.com/Bkuste2/music_collection_front
+cd music_collection_front
 yarn install
 yarn dev
 ```
@@ -37,7 +37,6 @@ These aliases are pre-configured in the project to help you with development
 - @services
 - @contexts
 -	@helpers
-- @types
 
 If you want to create any alias, just follow the example below:
 
@@ -98,29 +97,3 @@ Create all useState structure
 ```javascript
 const [$1, set${2:$1}] = useState<$3>($4)
 ```
-
-<br/>
-
-### sb
-
-Snippet to initial setup StorybookFile
-
-```javascript
-import { Meta, StoryObj } from '@storybook/react'
-
-export default {
-	title: 'Component/ComponentName',
-	component: ComponentName,
-} as Meta
-
-export const Default: StoryObj = {}
-```
-
-<br/>
-
-### sbv
-
-Snippet create an storybook variant
-
-```javascript
-export const ${1:Default}: StoryObj = {}

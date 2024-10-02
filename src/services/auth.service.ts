@@ -1,4 +1,5 @@
 import { api } from "@/assets/configs/axios.ts";
+import { User } from "@/types/user.model";
 
 export type LoginProps = {
 	username: string;
@@ -11,13 +12,10 @@ class AuthService {
 		return response.data;
 	}
 
-	async profile() {
+	async profile(): Promise<User> {
 		const response = await api("/auth/profile");
 		const user = response.data.data;
-		return {
-			id: user.id,
-			...user.attributes
-		};
+		return user;
 	}
 }
 

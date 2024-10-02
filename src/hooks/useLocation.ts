@@ -7,8 +7,7 @@ import {
 } from "react-router-dom";
 import { FEATURES, Feature } from "../consts/features";
 import { useAuth } from "../contexts/auth-context";
-import { User } from "../models/user";
-import { Laboratory } from "../models/laboratory.ts";
+import { User } from "@/types/user.model.ts";
 
 type LinkedFeature = Omit<
 	Feature & { parent?: LinkedFeature },
@@ -17,7 +16,7 @@ type LinkedFeature = Omit<
 
 const indexFeatures = (
 	features: Feature[],
-	user: User | Laboratory,
+	user: User,
 	path: string[],
 	parent?: LinkedFeature,
 ): { feature: LinkedFeature; path: string }[] => {
@@ -28,10 +27,7 @@ const indexFeatures = (
 			"children",
 			"group",
 			"icon",
-		]) as LinkedFeature; // REVIEW: see this on future
-		if (feature.allowedFor && !feature.allowedFor(user)) {
-			return [];
-		}
+		]) as LinkedFeature;
 
 		if (feature.children) {
 			return [

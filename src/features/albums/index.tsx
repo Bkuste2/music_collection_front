@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { List } from "@components/data-display/list.tsx";
-import { Avatar, Button, List as AntdList, Popconfirm, Typography } from "antd";
-import React from "react";
-import { albumsService } from "@/services/albumsService.ts";
-import { Album } from "@/types/album.model.ts";
-import { Outlet, useNavigate } from "react-router-dom";
-import { notification } from "@/services/default/notification.ts";
 import { useAuth } from "@/contexts/auth-context.tsx";
+import { albumsService } from "@/services/albumsService.ts";
+import { notification } from "@/services/default/notification.ts";
+import { Album } from "@/types/album.model.ts";
+import { List } from "@components/data-display/list.tsx";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { List as AntdList, Avatar, Button, Popconfirm, Typography } from "antd";
+import React from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 
 export const Albums: React.FC = () => {
 	const { user } = useAuth();
@@ -47,7 +47,7 @@ export const Albums: React.FC = () => {
 
 								<Button onClick={() => navigate(`/albums/create`)}>+</Button>
 							</div>
-							<div className="h-full overflow-y-auto pr-10">
+							<div className="h-full overflow-y-auto scroll pr-10">
 								<List<Omit<Album["attributes"], "artist-id"> & { id: string }>
 									data={
 										data.map(({ id, attributes }) => ({
@@ -65,19 +65,20 @@ export const Albums: React.FC = () => {
 												>
 													edit
 												</Button>,
-
-												<Popconfirm
-													placement="topRight"
-													title="Are you sure you want to delete this album?"
-													description="This action cannot be undone."
-													okText="Yes"
-													cancelText="No"
-													onConfirm={() =>
-														removeMutation.mutate({ id: item.id })
-													}
-												>
-													<Button>remove</Button>
-												</Popconfirm>,
+												...(user.attributes.role === "admin" ? [
+													<Popconfirm
+														placement="topRight"
+														title="Are you sure you want to delete this album?"
+														description="This action cannot be undone."
+														okText="Yes"
+														cancelText="No"
+														onConfirm={() =>
+															removeMutation.mutate({ id: item.id })
+														}
+													>
+														<Button>remove</Button>
+													</Popconfirm>,
+												] : [])
 											]}
 										>
 											<AntdList.Item.Meta
